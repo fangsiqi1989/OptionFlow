@@ -493,7 +493,7 @@ score: {}
                 historical_records = """
 History records:
 """
-                for r in sorted(dict_historical_data[row[12]], key=lambda x: x[-1])[-3:]:
+                for r in sorted(dict_historical_data[row[12]], key=lambda x: x[-1])[-10:]:
                     historical_records += r[1] + ' ' + str(r[2]) + ' ' + r[3] + ' ' + str(
                         r[4]) + ' ' + r[5] + ' ' + r[6] + '\n'
                 historical_line = line + historical_records
