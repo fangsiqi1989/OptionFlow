@@ -14,6 +14,7 @@ import sys
 import datetime
 
 # python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:209.141.49.11:8080 -username optionflow -password ethan123456 -target "Option Flow"
+# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:209.141.49.11:8080 -username optionflow -password ethan123456 -free_target "Option Flow Free,Free_dummy" -vip_target "Option Flow,Option Flow VIP,VIP_dummy"
 parser = argparse.ArgumentParser()
 parser.add_argument('-url', type=str, default=None)
 parser.add_argument('-login_url', type=str, default=None)
