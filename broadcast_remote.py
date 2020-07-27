@@ -14,7 +14,7 @@ import sys
 import datetime
 
 # python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:209.141.49.11:8080 -username optionflow -password ethan123456 -target "Option Flow"
-# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:209.141.49.11:8080 -username optionflow -password ethan123456 -free_target "Option Flow Free,Free_dummy" -vip_target "Option Flow,Option Flow VIP,VIP_dummy"
+# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:209.141.49.11:8080 -username optionflow -password ethan123456 -free_target "Option Flow Free" -vip_target "Option Flow"
 parser = argparse.ArgumentParser()
 parser.add_argument('-url', type=str, default=None)
 parser.add_argument('-login_url', type=str, default=None)
@@ -464,8 +464,8 @@ class Broadcast:
 5. {}   {}
 
 """.format(max_ticket_data[0][0], max_ticket_data[1][0], max_ticket_data[2][0], max_ticket_data[3][0], max_ticket_data[4][0],
-           max_premium_data[0][0], "${:,.2f}".format(max_premium_data[0][1]), max_premium_data[1][0], "${:,.2f}".format(max_premium_data[1][1]),max_premium_data[2][0], "${:,.2f}".format(max_premium_data[2][1]),max_premium_data[3][0], "${:,.2f}".format(max_premium_data[3][1]),max_premium_data[4][0],"${:,.2f}".format(max_premium_data[4][1]),
-           single_max_premium_data[0][0],"${:,.2f}".format(single_max_premium_data[0][1]), single_max_premium_data[1][0],"${:,.2f}".format(single_max_premium_data[1][1]), single_max_premium_data[2][0],"${:,.2f}".format(single_max_premium_data[2][1]), single_max_premium_data[3][0],"${:,.2f}".format(single_max_premium_data[3][1]), single_max_premium_data[4][0],"${:,.2f}".format(single_max_premium_data[4][1]))
+           max_premium_data[0][0], "${:,}".format(max_premium_data[0][1]), max_premium_data[1][0], "${:,}".format(max_premium_data[1][1]),max_premium_data[2][0], "${:,}".format(max_premium_data[2][1]),max_premium_data[3][0], "${:,}".format(max_premium_data[3][1]),max_premium_data[4][0],"${:,}".format(max_premium_data[4][1]),
+           single_max_premium_data[0][0],"${:,}".format(single_max_premium_data[0][1]), single_max_premium_data[1][0],"${:,}".format(single_max_premium_data[1][1]), single_max_premium_data[2][0],"${:,}".format(single_max_premium_data[2][1]), single_max_premium_data[3][0],"${:,}".format(single_max_premium_data[3][1]), single_max_premium_data[4][0],"${:,}".format(single_max_premium_data[4][1]))
             for vip_win in self.vip_target:
                 vip_window = self.local_win(vip_win)
                 self.txt_ctrl_v(hourly_update+contract_hourly)
@@ -493,7 +493,7 @@ score: {}
                 historical_records = """
 History records:
 """
-                for r in sorted(dict_historical_data[row[12]], key=lambda x: x[-1])[-10:]:
+                for r in sorted(dict_historical_data[row[12]], key=lambda x: x[-1],reverse=True)[:10]:
                     historical_records += r[1] + ' ' + str(r[2]) + ' ' + r[3] + ' ' + str(
                         r[4]) + ' ' + r[5] + ' ' + r[6] + '\n'
                 historical_line = line + historical_records
