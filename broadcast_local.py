@@ -21,7 +21,8 @@ parser.add_argument('-login_url', type=str, default=None)
 parser.add_argument('-proxy', type=str, default=None)
 parser.add_argument('-username', type=str, default=None)
 parser.add_argument('-password', type=str, default=None)
-parser.add_argument('-target', type=str, default=None)
+parser.add_argument('-free_target', type=str, default=None)
+parser.add_argument('-vip_target', type=str, default=None)
 args = parser.parse_args()
 
 headers = {
@@ -29,6 +30,9 @@ headers = {
 }
 
 running_count = 1
+
+time_point = max(10, datetime.datetime.now().hour+1)
+# time_point = 23
 
 
 def build_database_connection():
@@ -232,7 +236,8 @@ class Extract:
 
 class Broadcast:
     def __init__(self):
-        self.target = args.target
+        self.free_target = args.free_target.split(',')
+        self.vip_target = args.vip_target.split(',')
 
     @staticmethod
     def send_msg(win):
@@ -253,6 +258,44 @@ class Broadcast:
         clipboard.SetClipboardData(win32con.CF_UNICODETEXT, txt_str)
         clipboard.CloseClipboard()
         return
+
+    @staticmethod
+    def local_win(title_name):
+        win = win32gui.FindWindow('ChatWnd', title_name)
+        print("找到句柄：%x" % win)
+        if win != 0:
+            left, top, right, bottom = win32gui.GetWindowRect(win)
+            print(left, top, right, bottom)  # 最小化为负数
+            # 最小化时点击还原，下面为单个窗口
+            if top < 0:
+                # 鼠标点击，还原窗口
+                win32api.SetCursorPos([190, 1040])  # 鼠标定位到(190,1040)
+                # 执行左单键击，若需要双击则延时几毫秒再点击一次即可
+                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP | win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+                ######点击完成一次
+            time.sleep(1)
+            left, top, right, bottom = win32gui.GetWindowRect(win)  # 取数
+            #
+            # 最小时点击还原窗口，下面一节为多个窗口，依次点击打开。
+            k = 1040  # 最小化后的纵坐标，横坐标约为190
+            while top < 0 and k > 800:  # 并设定最多6次，防止死循环
+                time.sleep(1)
+                win32api.SetCursorPos([180, k - 40])  # 鼠标定位菜单第一个
+                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP | win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+                ######点击完成一次
+                time.sleep(1)  # 等待窗口出现
+                left, top, right, bottom = win32gui.GetWindowRect(win)  # 取数
+                if top > 0:  # 判断是否还原
+                    break
+                else:
+                    k -= 40  # 菜单上移一格
+                    win32api.SetCursorPos([190, 1040])  # 重新打开菜单
+                    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP | win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+            win32gui.SetForegroundWindow(win)  # 获取控制
+            time.sleep(1)
+            return win
+        else:
+            print('请注意：找不到【%s】这个人（或群），请激活窗口！' % title_name)
 
     def send_data(self):
         sql = """
@@ -291,6 +334,69 @@ class Broadcast:
             else:
                 dict_historical_data[row[0]] = [row]
 
+        sql_max_ticket = """
+        select  ticker,count(*)
+        from historical_option_flow s
+        where transcation_timestamp between now() - INTERVAL 1 HOUR and now()
+        -- where date(transcation_timestamp)='2020-07-20'
+        and ticker not in  ('SPY', 'QQQ', 'DIA', 'SPX', 'IWM')
+        and time(original_etl_insert_time ) >= '09:30:00'
+        and time(original_etl_insert_time ) <= '16:30:00'
+        and weekday(original_etl_insert_time) not in (5,6)
+        group by ticker
+        order by count(*) desc,1
+        limit 5;
+        """
+
+        sql_max_contract = """
+        select ticker , expiry , ContractType ,strike ,count(*)
+        from historical_option_flow s
+        where transcation_timestamp between now() - INTERVAL 1 HOUR and now()
+        -- where date(transcation_timestamp)='2020-07-20'
+        and ticker not in  ('SPY', 'QQQ', 'DIA', 'SPX', 'IWM')
+        and time(original_etl_insert_time ) >= '09:30:00'
+        and time(original_etl_insert_time ) <= '16:30:00'
+        and weekday(original_etl_insert_time) not in (5,6)
+        group by  ticker , expiry , ContractType ,strike having count(*)>1
+        order by count(*) desc,1,2,3,4
+        limit 5;
+        """
+
+        sql_max_premium = """
+        select  ticker  , sum(premium_quantity )
+        from historical_option_flow s
+        where transcation_timestamp between now() - INTERVAL 1 HOUR and now()
+        -- where date(transcation_timestamp)='2020-07-20'
+        -- and ticker not in  ('SPY', 'QQQ', 'DIA', 'SPX', 'IWM')
+        and time(original_etl_insert_time ) >= '09:30:00'
+        and time(original_etl_insert_time ) <= '16:30:00'
+        and weekday(original_etl_insert_time) not in (5,6)
+        group by ticker
+        order by 2 desc,1
+        limit 5;
+        """
+
+        sql_max_single_premium = """
+        select  ticker  , premium_quantity 
+        from historical_option_flow s
+        where transcation_timestamp between now() - INTERVAL 1 HOUR and now()
+        -- where date(transcation_timestamp)='2020-07-20'
+        -- and ticker not in  ('SPY', 'QQQ', 'DIA', 'SPX', 'IWM')
+        and time(original_etl_insert_time ) >= '09:30:00'
+        and time(original_etl_insert_time ) <= '16:30:00'
+        and weekday(original_etl_insert_time) not in (5,6)
+        order by 2 desc,1
+        limit 5;
+                """
+
+        max_ticket_data = get_data(sql_max_ticket)
+
+        max_contract_data = get_data(sql_max_contract)
+
+        max_premium_data = get_data(sql_max_premium)
+
+        single_max_premium_data = get_data(sql_max_single_premium)
+
         conn = build_database_connection()
 
         cursor = conn.cursor()
@@ -305,44 +411,74 @@ class Broadcast:
 
         conn.close()
 
-        title_name = self.target  # 需要单独打开张三的对话框，好友名称
-        win = win32gui.FindWindow('ChatWnd', title_name)
-        print("找到句柄：%x" % win)
-        if win != 0:
-            left, top, right, bottom = win32gui.GetWindowRect(win)
-            print(left, top, right, bottom)  # 最小化为负数
-            # 最小化时点击还原，下面为单个窗口
-            if top < 0:
-                # 鼠标点击，还原窗口
-                win32api.SetCursorPos([190, 1040])  # 鼠标定位到(190,1040)
-                # 执行左单键击，若需要双击则延时几毫秒再点击一次即可
-                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP | win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
-                ######点击完成一次
-            time.sleep(1)
-            left, top, right, bottom = win32gui.GetWindowRect(win)  # 取数
-            #
-            # 最小时点击还原窗口，下面一节为多个窗口，依次点击打开。
-            k = 1040  # 最小化后的纵坐标，横坐标约为190
-            while top < 0 and k > 800:  # 并设定最多6次，防止死循环
-                time.sleep(1)
-                win32api.SetCursorPos([180, k - 40])  # 鼠标定位菜单第一个
-                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP | win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
-                ######点击完成一次
-                time.sleep(1)  # 等待窗口出现
-                left, top, right, bottom = win32gui.GetWindowRect(win)  # 取数
-                if top > 0:  # 判断是否还原
-                    break
-                else:
-                    k -= 40  # 菜单上移一格
-                    win32api.SetCursorPos([190, 1040])  # 重新打开菜单
-                    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP | win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
-            win32gui.SetForegroundWindow(win)  # 获取控制
-            time.sleep(1)
-            print(len(data), ' message need to be sent!')
-            i = 1
+        # free_window = self.local_win(self.free_target)
+        # vip_window = self.local_win(self.vip_target)
 
-            for row in data:
-                line = """{}
+        global time_point
+        print('timpoint:', datetime.datetime.now().hour, time_point)
+        # if True:
+        if datetime.datetime.now().hour == time_point and 9<datetime.datetime.now().hour<17:
+            print(max_ticket_data)
+            print(max_contract_data)
+            print(max_premium_data)
+
+            if len(max_contract_data)>0:
+                contract_hourly = """最活跃期权 （期权成交数最多）:
+"""
+                for i in range(len(max_contract_data)):
+                    # print(i+1,max_contract_data[i][0],max_contract_data[i][1],max_contract_data[i][2],max_contract_data[i][3])
+                    contract = """{}. {} {} {} {}
+""".format(i+1,max_contract_data[i][0],max_contract_data[i][1],max_contract_data[i][2],max_contract_data[i][3])
+                    contract_hourly += contract
+                    print(contract_hourly)
+            else:
+                contract_hourly = """最活跃期权 （期权成交数最多）:
+无重复记录
+                                    """
+
+
+
+
+
+            hourly_update ="""@所有人
+最近一小时热点分析
+最活跃个股（大单期权数最多）：
+1. {}
+2. {}
+3. {}
+4. {}
+5. {}
+
+大单成交量（premium）最大：
+1. {}   {}
+2. {}   {}
+3. {}   {}
+4. {}   {}
+5. {}   {}
+
+单笔大单成交量（premium）最大：
+1. {}   {}
+2. {}   {}
+3. {}   {}
+4. {}   {}
+5. {}   {}
+
+""".format(max_ticket_data[0][0], max_ticket_data[1][0], max_ticket_data[2][0], max_ticket_data[3][0], max_ticket_data[4][0],
+           max_premium_data[0][0], "${:,.2f}".format(max_premium_data[0][1]), max_premium_data[1][0], "${:,.2f}".format(max_premium_data[1][1]),max_premium_data[2][0], "${:,.2f}".format(max_premium_data[2][1]),max_premium_data[3][0], "${:,.2f}".format(max_premium_data[3][1]),max_premium_data[4][0],"${:,.2f}".format(max_premium_data[4][1]),
+           single_max_premium_data[0][0],"${:,.2f}".format(single_max_premium_data[0][1]), single_max_premium_data[1][0],"${:,.2f}".format(single_max_premium_data[1][1]), single_max_premium_data[2][0],"${:,.2f}".format(single_max_premium_data[2][1]), single_max_premium_data[3][0],"${:,.2f}".format(single_max_premium_data[3][1]), single_max_premium_data[4][0],"${:,.2f}".format(single_max_premium_data[4][1]))
+            for vip_win in self.vip_target:
+                vip_window = self.local_win(vip_win)
+                self.txt_ctrl_v(hourly_update+contract_hourly)
+                self.send_msg(vip_window)
+            time_point += 1
+            if time_point == 17:
+                time_point = 10
+
+        print(len(data), ' message need to be sent!')
+        i = 1
+
+        for row in data:
+            line = """{}
 Ticker: {} {} {}
 Strike: {}
 Spot: {}
@@ -352,27 +488,34 @@ premium: {}
 sector: {}
 score: {}
 """.format(row[13], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[10], row[11])
-                if row[12] in dict_historical_data and len(dict_historical_data[row[12]]) > 1:
-                    historical_records = """
+            historical_line = line
+            if row[12] in dict_historical_data and len(dict_historical_data[row[12]]) > 1:
+                historical_records = """
 History records:
 """
-                    for r in sorted(dict_historical_data[row[12]], key=lambda x: x[-1]):
-                        historical_records += r[1] + ' ' + str(r[2]) + ' ' + r[3] + ' ' + str(
-                            r[4]) + ' ' + r[5] + ' ' + r[6] + '\n'
-                    line += historical_records
+                for r in sorted(dict_historical_data[row[12]], key=lambda x: x[-1])[-3:]:
+                    historical_records += r[1] + ' ' + str(r[2]) + ' ' + r[3] + ' ' + str(
+                        r[4]) + ' ' + r[5] + ' ' + r[6] + '\n'
+                historical_line = line + historical_records
+
+            for vip_win in self.vip_target:
+                vip_window = self.local_win(vip_win)
+
+                self.txt_ctrl_v(historical_line)
+                self.send_msg(vip_window)
+
+            for f_win in self.free_target:
+                free_window = self.local_win(f_win)
 
                 self.txt_ctrl_v(line)
-                self.send_msg(win)
-                print(i, 'messages sent!')
-                i += 1
-                time.sleep(1)
-            print('This session finished!')
-            print('')
-            print('')
-            print('')
-
-        else:
-            print('请注意：找不到【%s】这个人（或群），请激活窗口！' % title_name)
+                self.send_msg(free_window)
+            print(i, 'messages sent!')
+            i += 1
+            time.sleep(1)
+        print('This session finished!')
+        print('')
+        print('')
+        print('')
 
     def clean_historical_data(self):
         sql = """
@@ -404,6 +547,10 @@ def _main():
     extract = Extract()
     extract.run()
     broadcast = Broadcast()
+    print(type(broadcast.free_target))
+    print(broadcast.free_target)
+    print(type(broadcast.vip_target))
+    print(broadcast.vip_target)
     broadcast.send_data()
     running_count += 1
     now = datetime.datetime.now()
@@ -421,7 +568,7 @@ if __name__ == '__main__':
                                                            microsecond=0) < now < now.replace(hour=16, minute=0,
                                                                                               second=0, microsecond=0):
             _main()
-            time.sleep(100)
+            time.sleep(200)
         else:
             delay = ((datetime.timedelta(hours=24) - (
                         now.replace(second=0, microsecond=0) - now.replace(hour=7, minute=35, second=0,
