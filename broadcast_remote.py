@@ -105,10 +105,6 @@ class Extract:
         # sys.exit(0)
         conn = build_database_connection()
 
-        if len(data) == 0:
-            print('NO DATA RETURN!!!')
-            sys.exit(0)
-
         cursor = conn.cursor()
 
         for d in data:
