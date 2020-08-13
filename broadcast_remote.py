@@ -31,7 +31,7 @@ headers = {
 
 running_count = 1
 
-time_point = max(10, datetime.datetime.now().hour+1)
+time_point = max(10, datetime.datetime.now().hour+1 if datetime.datetime.now().hour+1<=16 else 10)
 # time_point = 23
 
 
@@ -297,7 +297,7 @@ class Broadcast:
         sql = """
         select * from new_option_flow
         where time(original_etl_insert_time ) >= '09:30:00'
-        and time(original_etl_insert_time ) <= '16:30:00'
+        and time(original_etl_insert_time ) <= '16:50:00'
         and weekday(original_etl_insert_time) not in (5,6)
         order by transcation_timestamp asc;
         """
@@ -442,8 +442,8 @@ class Broadcast:
 1. {}
 2. {}
 3. {}
-4. {}
 5. {}
+4. {}
 
 大单成交量（premium）最大：
 1. {}   {}
@@ -467,8 +467,8 @@ class Broadcast:
                 self.txt_ctrl_v(hourly_update+contract_hourly)
                 self.send_msg(vip_window)
             time_point += 1
-            if time_point == 17:
-                time_point = 10
+        if time_point >= 17:
+            time_point = 10
 
         print(len(data), ' message need to be sent!')
         i = 1
@@ -572,6 +572,7 @@ if __name__ == '__main__':
                                  24 * 3600))
             if delay == 0:
                 delay = 60
+            print(max(10, datetime.datetime.now().hour+1 if datetime.datetime.now().hour+1<16 else 10))
             print('Out of transcation window, current time is {}, waiting time is {}s'.format(now, delay))
             time.sleep(delay)
     # scheduler = BlockingScheduler()
