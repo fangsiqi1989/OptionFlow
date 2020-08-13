@@ -538,23 +538,29 @@ History records:
 
 
 def _main():
-    global running_count
-    print('{} this is {} time run'.format(datetime.datetime.now(),running_count))
-    extract = Extract()
-    extract.run()
-    broadcast = Broadcast()
-    print(type(broadcast.free_target))
-    print(broadcast.free_target)
-    print(type(broadcast.vip_target))
-    print(broadcast.vip_target)
-    broadcast.send_data()
-    running_count += 1
-    now = datetime.datetime.now()
-    if now > now.replace(hour=16, minute=55, second=0, microsecond=0):
-        broadcast.clean_historical_data()
-        print('')
-        print('')
-        print('')
+    try:
+        global running_count
+        print('{} this is {} time run'.format(datetime.datetime.now(),running_count))
+        extract = Extract()
+        extract.run()
+        broadcast = Broadcast()
+        print(type(broadcast.free_target))
+        print(broadcast.free_target)
+        print(type(broadcast.vip_target))
+        print(broadcast.vip_target)
+        broadcast.send_data()
+        running_count += 1
+        now = datetime.datetime.now()
+        if now > now.replace(hour=16, minute=55, second=0, microsecond=0):
+            broadcast.clean_historical_data()
+            print('')
+            print('')
+            print('')
+    except:
+        error_window = Broadcast.local_win('好基友')
+        Broadcast.txt_ctrl_v("Option flow job failed!!! Please check immediately!!!")
+        Broadcast.send_msg(error_window)
+        time.sleep(60)
 
 
 if __name__ == '__main__':
@@ -563,8 +569,11 @@ if __name__ == '__main__':
         if now.isoweekday() in range(1, 6) and now.replace(hour=8, minute=30, second=0,
                                                            microsecond=0) < now < now.replace(hour=17, minute=0,
                                                                                               second=0, microsecond=0):
-            _main()
-            time.sleep(60)
+            try:
+                _main()
+                time.sleep(60)
+            except:
+                time.sleep(60)
         else:
             delay = ((datetime.timedelta(hours=24) - (
                         now.replace(second=0, microsecond=0) - now.replace(hour=8, minute=35, second=0,
