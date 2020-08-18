@@ -13,8 +13,8 @@ import argparse
 import sys
 import datetime
 
-# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:209.141.49.11:8080 -username optionflow -password ethan123456 -target "Option Flow"
-# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:209.141.49.11:8080 -username optionflow -password ethan123456 -free_target "Option Flow Free" -vip_target "Option Flow"
+# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:52.179.18.244:8080 -username optionflow -password ethan123456 -target "Option Flow"
+# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:52.179.18.244:8080 -username optionflow -password ethan123456 -free_target "Option Flow Free" -vip_target "Option Flow"
 parser = argparse.ArgumentParser()
 parser.add_argument('-url', type=str, default=None)
 parser.add_argument('-login_url', type=str, default=None)
@@ -62,6 +62,17 @@ def get_data(sql):
     conn.close()
 
     return results
+
+
+def telegram_bot_sendtext(chatID, bot_message):
+    print('execute telegram_bot_sendtext')
+    bot_token = '1323919359:AAEtt77oSWn4rHxExKvSB3QDmyZu9hnGblM'
+    bot_chatID = chatID
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+
+    response = requests.get(send_text)
+
+    return response.json()
 
 
 class Extract:
@@ -466,6 +477,7 @@ class Broadcast:
                 vip_window = self.local_win(vip_win)
                 self.txt_ctrl_v(hourly_update+contract_hourly)
                 self.send_msg(vip_window)
+            telegram_bot_sendtext('-1001403437208', hourly_update + contract_hourly)
             time_point += 1
         if time_point >= 17:
             time_point = 10
@@ -499,12 +511,14 @@ History records:
 
                 self.txt_ctrl_v(historical_line)
                 self.send_msg(vip_window)
+            telegram_bot_sendtext('-1001403437208', historical_line)
 
             for f_win in self.free_target:
                 free_window = self.local_win(f_win)
 
                 self.txt_ctrl_v(line)
                 self.send_msg(free_window)
+            telegram_bot_sendtext('-462368951', line)
             print(i, 'messages sent!')
             i += 1
             time.sleep(1)
@@ -557,9 +571,7 @@ def _main():
             print('')
             print('')
     except:
-        error_window = Broadcast.local_win('好基友')
-        Broadcast.txt_ctrl_v("Option flow job failed!!! Please check immediately!!!")
-        Broadcast.send_msg(error_window)
+        telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
         time.sleep(60)
 
 
@@ -573,6 +585,7 @@ if __name__ == '__main__':
                 _main()
                 time.sleep(60)
             except:
+                telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
                 time.sleep(60)
         else:
             delay = ((datetime.timedelta(hours=24) - (

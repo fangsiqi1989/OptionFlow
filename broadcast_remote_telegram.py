@@ -529,7 +529,7 @@ History records:
             #
             #     self.txt_ctrl_v(line)
             #     self.send_msg(free_window)
-            telegram_bot_sendtext(v, line)
+            telegram_bot_sendtext('-462368951', line)
             print(i, 'messages sent!')
             i += 1
             time.sleep(1)
