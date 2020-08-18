@@ -62,6 +62,16 @@ def get_data(sql):
 
     return results
 
+def telegram_bot_sendtext(chatID, bot_message):
+    print('execute telegram_bot_sendtext')
+    bot_token = '1323919359:AAEtt77oSWn4rHxExKvSB3QDmyZu9hnGblM'
+    bot_chatID = chatID
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+
+    response = requests.get(send_text)
+
+    return response.json()
+
 
 class Extract:
     def __init__(self):
@@ -292,14 +302,15 @@ class Broadcast:
         else:
             print('请注意：找不到【%s】这个人（或群），请激活窗口！' % title_name)
 
-    def telegram_bot_sendtext(bot_message):
-        bot_token = '1323919359:AAEtt77oSWn4rHxExKvSB3QDmyZu9hnGblM'
-        bot_chatID = '-1001403437208'
-        send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
-
-        response = requests.get(send_text)
-
-        return response.json()
+    # def telegram_bot_sendtext(bot_message):
+    #     print('execute telegram_bot_sendtext')
+    #     # bot_token = '1323919359:AAEtt77oSWn4rHxExKvSB3QDmyZu9hnGblM'
+    #     # bot_chatID = '-1001403437208'
+    #     # send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+    #     #
+    #     # response = requests.get(send_text)
+    #     #
+    #     # return response.json()
 
     def send_data(self):
         sql = """
@@ -474,7 +485,7 @@ class Broadcast:
             #     vip_window = self.local_win(vip_win)
             #     self.txt_ctrl_v(hourly_update+contract_hourly)
             #     self.send_msg(vip_window)
-            self.telegram_bot_sendtext(hourly_update+contract_hourly)
+            telegram_bot_sendtext('-1001403437208', hourly_update+contract_hourly)
             time_point += 1
         if time_point >= 17:
             time_point = 10
@@ -508,14 +519,17 @@ History records:
             #
             #     self.txt_ctrl_v(historical_line)
             #     self.send_msg(vip_window)
-            self.telegram_bot_sendtext(historical_line)
+            # self.telegram_bot_sendtext(historical_line)
+            # print(historical_line)
+            telegram_bot_sendtext('-1001403437208', historical_line)
+            # print('Sent successfully')
 
             # for f_win in self.free_target:
             #     free_window = self.local_win(f_win)
             #
             #     self.txt_ctrl_v(line)
             #     self.send_msg(free_window)
-            # self.telegram_bot_sendtext(line)
+            telegram_bot_sendtext(v, line)
             print(i, 'messages sent!')
             i += 1
             time.sleep(1)
@@ -568,7 +582,7 @@ def _main():
             print('')
             print('')
     except:
-        Broadcast.telegram_bot_sendtext("Option flow job failed!!! Please check immediately!!!")
+        telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
         time.sleep(60)
 
 
@@ -582,6 +596,7 @@ if __name__ == '__main__':
                 _main()
                 time.sleep(60)
             except:
+                telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
                 time.sleep(60)
         else:
             delay = ((datetime.timedelta(hours=24) - (
