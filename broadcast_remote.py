@@ -14,7 +14,7 @@ import sys
 import datetime
 
 # python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:52.179.18.244:8080 -username optionflow -password ethan123456 -target "Option Flow"
-# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:52.179.18.244:8080 -username optionflow -password ethan123456 -free_target "Option Flow Free" -vip_target "Option Flow"
+# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:52.179.18.244:8080 -username optionflow -password ethan123456 -free_target "Option Flow Free" -vip_target "Option Flow VIP"
 parser = argparse.ArgumentParser()
 parser.add_argument('-url', type=str, default=None)
 parser.add_argument('-login_url', type=str, default=None)
@@ -88,11 +88,14 @@ class Extract:
             'amember_login': self.username
             , 'amember_pass': self.password
         }
-
-        session = requests.session()
-        session.post(self.login_url, data, headers)
-        print('Session created!')
-        return session
+        try:
+            session = requests.session()
+            session.post(self.login_url, data, headers)
+            print('Session created!')
+            return session
+        except:
+            telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+            return None
 
     def extract(self, session):
         proxy = {
@@ -101,7 +104,11 @@ class Extract:
         # print(proxy)
         # print(session)
 
-        response = session.get(self.url, headers=headers, proxies=proxy)
+        try:
+            response = session.get(self.url, headers=headers, proxies=proxy)
+        except:
+            telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+            return
         # print(response)
 
         parser = etree.HTMLParser(encoding='utf-8')
@@ -497,6 +504,7 @@ sector: {}
 score: {}
 """.format(row[13], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[10], row[11])
             historical_line = line
+            free = ['SPY', 'QQQ', 'DIA', 'IWM']
             if row[12] in dict_historical_data and len(dict_historical_data[row[12]]) > 1:
                 historical_records = """
 History records:
@@ -513,12 +521,13 @@ History records:
                 self.send_msg(vip_window)
             telegram_bot_sendtext('-1001403437208', historical_line)
 
-            for f_win in self.free_target:
-                free_window = self.local_win(f_win)
+            if row[1] in free:
+                for f_win in self.free_target:
+                    free_window = self.local_win(f_win)
 
-                self.txt_ctrl_v(line)
-                self.send_msg(free_window)
-            telegram_bot_sendtext('-462368951', line)
+                    self.txt_ctrl_v(line)
+                    self.send_msg(free_window)
+                telegram_bot_sendtext('-462368951', line)
             print(i, 'messages sent!')
             i += 1
             time.sleep(1)
@@ -558,10 +567,6 @@ def _main():
         extract = Extract()
         extract.run()
         broadcast = Broadcast()
-        print(type(broadcast.free_target))
-        print(broadcast.free_target)
-        print(type(broadcast.vip_target))
-        print(broadcast.vip_target)
         broadcast.send_data()
         running_count += 1
         now = datetime.datetime.now()
