@@ -31,7 +31,7 @@ headers = {
 
 running_count = 1
 
-time_point = max(10, datetime.datetime.now().hour+1)
+time_point = max(10, datetime.datetime.now().hour+1 if datetime.datetime.now().hour+1<=16 else 10)
 # time_point = 23
 
 
@@ -64,6 +64,17 @@ def get_data(sql):
     return results
 
 
+def telegram_bot_sendtext(chatID, bot_message):
+    print('execute telegram_bot_sendtext')
+    bot_token = '1323919359:AAEtt77oSWn4rHxExKvSB3QDmyZu9hnGblM'
+    bot_chatID = chatID
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+
+    response = requests.get(send_text)
+
+    return response.json()
+
+
 class Extract:
     def __init__(self):
         self.url = args.url
@@ -77,37 +88,44 @@ class Extract:
             'amember_login': self.username
             , 'amember_pass': self.password
         }
-
-        session = requests.session()
-        session.post(self.login_url, data, headers)
-        print('Session created!')
-        return session
+        try:
+            session = requests.session()
+            session.post(self.login_url, data, headers)
+            print('Session created!')
+            return session
+        except:
+            telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+            return None
 
     def extract(self, session):
         proxy = {
             args.proxy.split(':')[0]: args.proxy.split(':')[1] + ':' + args.proxy.split(':')[2]
         }
-        # print(proxy)
-        # print(session)
+        print(proxy)
+        print(session)
 
-        response = session.get(self.url, headers=headers, proxies=proxy)
-        # print(response)
+        try:
+            response = session.get(self.url, headers=headers, proxies=proxy)
+        except:
+            telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+            return
+        # print(len(response.content.decode('utf-8')))
+        with open('flowalgo.html', 'w') as fp:
+            fp.write('test')
 
         parser = etree.HTMLParser(encoding='utf-8')
         # print(parser)
 
         htmlElement = etree.fromstring(response.content.decode('utf-8'), parser=parser)
-        # print(htmlElement)
+        print(htmlElement)
 
         data = htmlElement.xpath(
             '//*[@id="optionflow"]/div[2]//div[@class and @data-ticker and @data-sentiment and @data-flowid and @data-premiumpaid and @data-ordertype]')
-        # print(data)
+        print(data[0].xpath("./div[@class='time']/@data-time")[0])
         # sys.exit(0)
         conn = build_database_connection()
 
-        if len(data) == 0:
-            print('NO DATA RETURN!!!')
-            sys.exit(0)
+
 
         cursor = conn.cursor()
 
@@ -301,7 +319,7 @@ class Broadcast:
         sql = """
         select * from new_option_flow
         where time(original_etl_insert_time ) >= '09:30:00'
-        and time(original_etl_insert_time ) <= '16:30:00'
+        and time(original_etl_insert_time ) <= '16:50:00'
         and weekday(original_etl_insert_time) not in (5,6)
         order by transcation_timestamp asc;
         """
@@ -464,15 +482,16 @@ class Broadcast:
 5. {}   {}
 
 """.format(max_ticket_data[0][0], max_ticket_data[1][0], max_ticket_data[2][0], max_ticket_data[3][0], max_ticket_data[4][0],
-           max_premium_data[0][0], "${:,.2f}".format(max_premium_data[0][1]), max_premium_data[1][0], "${:,.2f}".format(max_premium_data[1][1]),max_premium_data[2][0], "${:,.2f}".format(max_premium_data[2][1]),max_premium_data[3][0], "${:,.2f}".format(max_premium_data[3][1]),max_premium_data[4][0],"${:,.2f}".format(max_premium_data[4][1]),
-           single_max_premium_data[0][0],"${:,.2f}".format(single_max_premium_data[0][1]), single_max_premium_data[1][0],"${:,.2f}".format(single_max_premium_data[1][1]), single_max_premium_data[2][0],"${:,.2f}".format(single_max_premium_data[2][1]), single_max_premium_data[3][0],"${:,.2f}".format(single_max_premium_data[3][1]), single_max_premium_data[4][0],"${:,.2f}".format(single_max_premium_data[4][1]))
+           max_premium_data[0][0], "${:,}".format(max_premium_data[0][1]), max_premium_data[1][0], "${:,}".format(max_premium_data[1][1]),max_premium_data[2][0], "${:,}".format(max_premium_data[2][1]),max_premium_data[3][0], "${:,}".format(max_premium_data[3][1]),max_premium_data[4][0],"${:,}".format(max_premium_data[4][1]),
+           single_max_premium_data[0][0],"${:,}".format(single_max_premium_data[0][1]), single_max_premium_data[1][0],"${:,}".format(single_max_premium_data[1][1]), single_max_premium_data[2][0],"${:,}".format(single_max_premium_data[2][1]), single_max_premium_data[3][0],"${:,}".format(single_max_premium_data[3][1]), single_max_premium_data[4][0],"${:,}".format(single_max_premium_data[4][1]))
             for vip_win in self.vip_target:
                 vip_window = self.local_win(vip_win)
                 self.txt_ctrl_v(hourly_update+contract_hourly)
                 self.send_msg(vip_window)
+            telegram_bot_sendtext('-1001403437208', hourly_update + contract_hourly)
             time_point += 1
-            if time_point == 17:
-                time_point = 10
+        if time_point >= 17:
+            time_point = 10
 
         print(len(data), ' message need to be sent!')
         i = 1
@@ -489,11 +508,12 @@ sector: {}
 score: {}
 """.format(row[13], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[10], row[11])
             historical_line = line
+            free = ['SPY', 'QQQ', 'DIA', 'IWM']
             if row[12] in dict_historical_data and len(dict_historical_data[row[12]]) > 1:
                 historical_records = """
 History records:
 """
-                for r in sorted(dict_historical_data[row[12]], key=lambda x: x[-1])[-3:]:
+                for r in sorted(dict_historical_data[row[12]], key=lambda x: x[-1],reverse=True)[:10]:
                     historical_records += r[1] + ' ' + str(r[2]) + ' ' + r[3] + ' ' + str(
                         r[4]) + ' ' + r[5] + ' ' + r[6] + '\n'
                 historical_line = line + historical_records
@@ -503,12 +523,15 @@ History records:
 
                 self.txt_ctrl_v(historical_line)
                 self.send_msg(vip_window)
+            telegram_bot_sendtext('-1001403437208', historical_line)
 
-            for f_win in self.free_target:
-                free_window = self.local_win(f_win)
+            if row[1] in free:
+                for f_win in self.free_target:
+                    free_window = self.local_win(f_win)
 
-                self.txt_ctrl_v(line)
-                self.send_msg(free_window)
+                    self.txt_ctrl_v(line)
+                    self.send_msg(free_window)
+                telegram_bot_sendtext('-462368951', line)
             print(i, 'messages sent!')
             i += 1
             time.sleep(1)
@@ -542,23 +565,23 @@ History records:
 
 
 def _main():
-    global running_count
-    print('{} this is {} time run'.format(datetime.datetime.now(),running_count))
-    extract = Extract()
-    extract.run()
-    broadcast = Broadcast()
-    print(type(broadcast.free_target))
-    print(broadcast.free_target)
-    print(type(broadcast.vip_target))
-    print(broadcast.vip_target)
-    broadcast.send_data()
-    running_count += 1
-    now = datetime.datetime.now()
-    if now > now.replace(hour=15, minute=55, second=0, microsecond=0):
-        broadcast.clean_historical_data()
-        print('')
-        print('')
-        print('')
+    try:
+        global running_count
+        print('{} this is {} time run'.format(datetime.datetime.now(),running_count))
+        extract = Extract()
+        extract.run()
+        broadcast = Broadcast()
+        broadcast.send_data()
+        running_count += 1
+        now = datetime.datetime.now()
+        if now > now.replace(hour=16, minute=55, second=0, microsecond=0):
+            broadcast.clean_historical_data()
+            print('')
+            print('')
+            print('')
+    except:
+        telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+        time.sleep(60)
 
 
 if __name__ == '__main__':
@@ -567,8 +590,12 @@ if __name__ == '__main__':
         if now.isoweekday() in range(1, 6) and now.replace(hour=7, minute=30, second=0,
                                                            microsecond=0) < now < now.replace(hour=16, minute=0,
                                                                                               second=0, microsecond=0):
-            _main()
-            time.sleep(200)
+            try:
+                _main()
+                time.sleep(60)
+            except:
+                telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+                time.sleep(60)
         else:
             delay = ((datetime.timedelta(hours=24) - (
                         now.replace(second=0, microsecond=0) - now.replace(hour=7, minute=35, second=0,
@@ -576,6 +603,7 @@ if __name__ == '__main__':
                                  24 * 3600))
             if delay == 0:
                 delay = 60
+            print(max(10, datetime.datetime.now().hour+1 if datetime.datetime.now().hour+1<16 else 10))
             print('Out of transcation window, current time is {}, waiting time is {}s'.format(now, delay))
             time.sleep(delay)
     # scheduler = BlockingScheduler()
