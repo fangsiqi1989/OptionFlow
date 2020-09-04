@@ -485,6 +485,7 @@ class Broadcast:
                 self.txt_ctrl_v(hourly_update+contract_hourly)
                 self.send_msg(vip_window)
             telegram_bot_sendtext('-1001403437208', hourly_update + contract_hourly)
+            telegram_bot_sendtext('-1001189954337', hourly_update + contract_hourly)
             time_point += 1
         if time_point >= 17:
             time_point = 10
@@ -520,6 +521,7 @@ History records:
                 self.txt_ctrl_v(historical_line)
                 self.send_msg(vip_window)
             telegram_bot_sendtext('-1001403437208', historical_line)
+            telegram_bot_sendtext('-1001189954337', historical_line)
 
             if row[1] in free:
                 for f_win in self.free_target:
@@ -527,7 +529,7 @@ History records:
 
                     self.txt_ctrl_v(line)
                     self.send_msg(free_window)
-                telegram_bot_sendtext('-462368951', line)
+                # telegram_bot_sendtext('-1001189954337', line)
             print(i, 'messages sent!')
             i += 1
             time.sleep(1)
