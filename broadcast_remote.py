@@ -13,8 +13,7 @@ import argparse
 import sys
 import datetime
 
-# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:52.179.18.244:8080 -username optionflow -password ethan123456 -target "Option Flow"
-# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:52.179.18.244:8080 -username optionflow -password ethan123456 -free_target "Option Flow Free" -vip_target "Option Flow VIP"
+# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:3.92.226.234:80 -username optionflow -password ethan123456 -target "Option Flow"
 parser = argparse.ArgumentParser()
 parser.add_argument('-url', type=str, default=None)
 parser.add_argument('-login_url', type=str, default=None)
@@ -27,6 +26,7 @@ args = parser.parse_args()
 
 headers = {
     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+    ,'cookie': '_ga=GA1.2.1202342193.1590423505; __adroll_fpc=9c849fbbf8c837fbb0fd0d9c1cc26b59-1590423505527; _fbp=fb.1.1590423505686.1091269716; SL_C_23361dd035530_KEY=909c690836dff219fdb765f6e1091e5a99e5f112; intercom-id-dtoll8e6=7058911b-0167-464a-a7dc-384230f804d3; __cfduid=dd4b2ccd1063484f34b81e9b813e8d9a61600659975; PHPSESSID=d6369f1d77270c7ddfb09bdd65eb3ccc; _gid=GA1.2.1272168385.1600659978; amember_nr=db50391cd8193cff55a5d6406dfcd65e; wordpress_logged_in_d1f53b3265d55ab79282aac86fcd5ba4=optionflow5%7C1600832780%7CIEGBaC0r0UdtAGeVaYQXZ0OsiDKQKOfWXAGkxbMweka%7Cc947fe320c689c56686bcece1493f849ee427858d78fd15655b312a5ea7c452e; mp_cef79b4c5c48fb3ec3efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%2014475%2C%22%24device_id%22%3A%20%221724ca0c71a16-03d10dd6b978b8-30647d01-1fa400-1724ca0c71b6c6%22%2C%22%24initial_referrer%22%3A%20%22%24direct%22%2C%22%24initial_referring_domain%22%3A%20%22%24direct%22%2C%22%24user_id%22%3A%2014475%2C%22__mps%22%3A%20%7B%7D%2C%22__mpso%22%3A%20%7B%7D%2C%22__mpus%22%3A%20%7B%7D%2C%22__mpa%22%3A%20%7B%7D%2C%22__mpu%22%3A%20%7B%7D%2C%22__mpr%22%3A%20%5B%5D%2C%22__mpap%22%3A%20%5B%5D%7D; __ar_v4=NM6BA5VRZNDFJDSOSRXRPP%3A20200830%3A4%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200830%3A4%7CEWEJP57Y6NEUVKJVXOCEJP%3A20200830%3A4; intercom-session-dtoll8e6=cTJUaW5ZOEFKNXRuWkNuN1Z0Sy9iUXMwb3lRdHhCWjBhVnJYODJ1TkdtT1dpekwzUklCRDZwZDRUVks4SnBITy0teDc2UGVaV3hHMTQ0SHZHMUVjUG5HQT09--550c8b7963f6a58044bcea6cdea3faa2a2578dec'
 }
 
 running_count = 1
