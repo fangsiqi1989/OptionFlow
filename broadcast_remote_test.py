@@ -13,7 +13,7 @@ import argparse
 import sys
 import datetime
 
-# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:3.92.226.234:80 -username option5 -password option123 -free_target "琪琪鲁" -vip_target "琪琪鲁"
+# python C:\Users\Administrator\Desktop\OptionFlow\broadcast_remote_test.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:3.92.226.234:80 -username option5 -password option123 -free_target "琪琪鲁" -vip_target "琪琪鲁"
 parser = argparse.ArgumentParser()
 parser.add_argument('-url', type=str, default=None)
 parser.add_argument('-login_url', type=str, default=None)
@@ -315,7 +315,7 @@ class Broadcast:
 
     def send_data(self):
         sql = """
-        select * from new_option_flow
+        select * from historical_option_flow
         order by transcation_timestamp desc
         limit 5;
         """
