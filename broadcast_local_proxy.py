@@ -14,7 +14,8 @@ import sys
 import datetime
 import random
 
-# python C:\Users\Siqi\Desktop\OptionFlow\broadcast_local.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:5.79.66.2:13010 -username option20201001 -password option123 -free_target "Option Flow Free" -vip_target "Option Flow VIP"
+# python C:\Users\Siqi\Desktop\OptionFlow\broadcast_local_proxy.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:5.79.66.2:13010 -username option20201001 -password option123 -free_target "Option Flow Fre" -vip_target "Option Flow VI"
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-url', type=str, default=None)
@@ -26,11 +27,11 @@ parser.add_argument('-free_target', type=str, default=None)
 parser.add_argument('-vip_target', type=str, default=None)
 args = parser.parse_args()
 
-headers = [
-# {
-# 'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0'
-# ,'cookie':'__adroll_fpc=ec138dc5651bbffdf6809a94abc7dd73-1601564534662; __ar_v4=%7CEWEJP57Y6NEUVKJVXOCEJP%3A20200931%3A1%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200931%3A1%7CNM6BA5VRZNDFJDSOSRXRPP%3A20200931%3A2; _fbp=fb.1.1601563852978.15442719; __cfduid=d56cb17662ac48aad2bcab65b8a2bd8941601563853; PHPSESSID=9e9ec6eb99e4ef5c48dc9e54b858e5c6; _ga=GA1.2.1217111726.1601564532; _gid=GA1.2.606489091.1601564532; intercom-id-dtoll8e6=22630759-c915-4933-a8e0-bf4b7b302598; intercom-session-dtoll8e6=SHNWcm5YN0lYMEx1cGNmNGcxT1ppZUpmRzJNWG…efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%2015595%2C%22%24device_id%22%3A%20%22174e4b108122be-01a1fbc4892f188-4c3f257b-e1000-174e4b10813203%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fflowalgo.com%2Fselect-a-plan%2F%22%2C%22%24initial_referring_domain%22%3A%20%22flowalgo.com%22%2C%22__mps%22%3A%20%7B%7D%2C%22__mpso%22%3A%20%7B%7D%2C%22__mpus%22%3A%20%7B%7D%2C%22__mpa%22%3A%20%7B%7D%2C%22__mpu%22%3A%20%7B%7D%2C%22__mpr%22%3A%20%5B%5D%2C%22__mpap%22%3A%20%5B%5D%2C%22%24user_id%22%3A%2015595%7D'.encode('utf-8')
-# },
+
+headers = [{
+'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0'
+,'cookie':'__adroll_fpc=ec138dc5651bbffdf6809a94abc7dd73-1601564534662; __ar_v4=%7CEWEJP57Y6NEUVKJVXOCEJP%3A20200931%3A1%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200931%3A1%7CNM6BA5VRZNDFJDSOSRXRPP%3A20200931%3A2; _fbp=fb.1.1601563852978.15442719; __cfduid=d56cb17662ac48aad2bcab65b8a2bd8941601563853; PHPSESSID=9e9ec6eb99e4ef5c48dc9e54b858e5c6; _ga=GA1.2.1217111726.1601564532; _gid=GA1.2.606489091.1601564532; intercom-id-dtoll8e6=22630759-c915-4933-a8e0-bf4b7b302598; intercom-session-dtoll8e6=SHNWcm5YN0lYMEx1cGNmNGcxT1ppZUpmRzJNWG…efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%2015595%2C%22%24device_id%22%3A%20%22174e4b108122be-01a1fbc4892f188-4c3f257b-e1000-174e4b10813203%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fflowalgo.com%2Fselect-a-plan%2F%22%2C%22%24initial_referring_domain%22%3A%20%22flowalgo.com%22%2C%22__mps%22%3A%20%7B%7D%2C%22__mpso%22%3A%20%7B%7D%2C%22__mpus%22%3A%20%7B%7D%2C%22__mpa%22%3A%20%7B%7D%2C%22__mpu%22%3A%20%7B%7D%2C%22__mpr%22%3A%20%5B%5D%2C%22__mpap%22%3A%20%5B%5D%2C%22%24user_id%22%3A%2015595%7D'.encode('utf-8')
+},
 {
 # mac pro firefox
 'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:81.0) Gecko/20100101 Firefox/81.0'
@@ -116,17 +117,17 @@ class Extract:
             'amember_login': self.username
             , 'amember_pass': self.password
         }
-        try:
-            session = requests.session()
-            session.post(self.login_url, data, headers)
-            print('Session created!')
-            return session
-        except:
-            telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
-            return None
+
+        session = requests.session()
+        session.post(self.login_url, data, headers)
+        print('Session created!')
+        return session
+
 
     def extract(self, session):
         proxy = {
+            # 'http':'http://206.189.235.214:80',
+            # 'https':'https://206.189.235.214:80'
             # world wide
             "http": "http://5.79.73.131:13010",
             "https": "https://5.79.73.131:13010"
@@ -135,16 +136,20 @@ class Extract:
             # "https": "https://5.79.66.2:13010"
         }
 
-        print(proxy)
-        print(session)
-        num = random.randint(0, len(headers) - 1)
-        print(num)
+        # print(proxy)
+        # print(session)
+        num = random.randint(0,len(headers)-1)
+        # print(list_cookies)
+        # headers = {
+        #     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362'
+        #
+        #     # ,'cookie': list_cookies[num]
+        #     , 'cookie':'__adroll_fpc=8650dd071d4f9ee9d10afdfe08713b16-1598885541788; intercom-id-dtoll8e6=7527060d-1790-4fb5-af0a-943ba3479f97; __ar_v4=NM6BA5VRZNDFJDSOSRXRPP%3A20200830%3A2%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200830%3A2%7CEWEJP57Y6NEUVKJVXOCEJP%3A20200830%3A2; SL_C_23361dd035530_KEY=909c690836dff219fdb765f6e1091e5a99e5f112; _ga=GA1.2.1459804922.1598885544; _gac_UA-105239038-2=1.1598885544.EAIaIQobChMIwd374NjF6wIVe-bjBx3SFQxoEAAYASAAEgLeG_D_BwE; __adroll_fpc=8650dd071d4f9ee9d10afdfe08713b16-1598885541788; _fbp=fb.1.1598885542545.864320631; __cfduid=d963325496004b44dfb232b031f2e0b451601347013; intercom-session-dtoll8e6=WVpJNzhjRUlRcGRuNnU3M0dyV2FWK1AyN2pmTVI0S3N6eUZwUlV2M0UrOEIxeWcvU3ZKV1FKWncweEJBRDFDcC0tY2x5SkVwTEt1ZEN4TFNYQnhEYlV2Zz09--f4c4eb9742eb730746de6486e0da12395797ed2d; _gid=GA1.2.1645237115.1601049796; _gat_gtag_UA_105239038_2=1; PHPSESSID=69fd31b518f6e2ded7cbc00bf0d7948c; mp_cef79b4c5c48fb3ec3efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%2015254%2C%22%24device_id%22%3A%20%2217445014dee19b-0c64897018d43f-8383667-e1000-17445014def1fe%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fflowalgo.com%2F%3Fgclid%3DEAIaIQobChMIwd374NjF6wIVe-bjBx3SFQxoEAAYASAAEgLeG_D_BwE%22%2C%22%24initial_referring_domain%22%3A%20%22flowalgo.com%22%2C%22%24user_id%22%3A%2015254%7D; __ar_v4=NM6BA5VRZNDFJDSOSRXRPP%3A20200830%3A3%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200830%3A2%7CEWEJP57Y6NEUVKJVXOCEJP%3A20200830%3A2; amember_nr=2dbc151f8b7fc1d87fbb368cde25c975; wordpress_logged_in_d1f53b3265d55ab79282aac86fcd5ba4=audreyb123%7C1601222601%7CERHt2edwbNvzkklG9SaVw8yUHW11M5xN7YuoMRQ4w8f%7Cee60a488af286c94613d2552e07d7e29db84a284ff62056cdab01733b177589b'
+        # }
+        # response = session.get(self.url, proxies=proxy)
+        response = session.get(self.url, headers=headers[num], proxies=proxy)
+        # response = session.get(self.url, headers=headers)
 
-        try:
-            response = session.get(self.url, headers=headers[num], proxies=proxy)
-        except:
-            telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
-            return
         # response = session.get(self.url, headers=headers, proxies=proxy)
         # response = session.get(self.url, headers=headers)
         # print(response.content.decode('utf-8'))
@@ -156,24 +161,25 @@ class Extract:
 
         htmlElement = etree.fromstring(response.content.decode('utf-8'), parser=parser)
         # htmlElement = etree.parse('flowalgo.html', parser=parser)
-        print(htmlElement)
+        # print(htmlElement)
 
         data = htmlElement.xpath('//*[@id="optionflow"]/div[2]//div[@class and @data-ticker and @data-sentiment and @data-flowid and @data-premiumpaid and @data-ordertype]')
+        print('=' * 100)
+        print('=' * 100)
+        print('=' * 100)
+        print('=' * 100)
+        print('=' * 100)
+        print('=' * 100)
+        print('=' * 100)
+        print('=' * 100)
+        print('=' * 100)
+        print('=' * 100)
+        # print(response.content.decode('utf-8'))
         print('Number of records', len(data))
-        if len(data) == 0:
-            print('='*100)
-            print('='*100)
-            print('='*100)
-            print('='*100)
-            print('='*100)
-            print('='*100)
-            print('='*100)
-            print('='*100)
-            print('='*100)
-            print('='*100)
-            # print(response.content.decode('utf-8'))
-            telegram_bot_sendtext('-408542611', 'No records return from website!!!')
-        # sys.exit(0)
+        # if len(data) == 0:
+        #     print(response.content.decode('utf-8'))
+        #     telegram_bot_sendtext('-408542611', 'No records return from website!!!')
+        sys.exit(0)
         conn = build_database_connection()
 
 
@@ -617,10 +623,10 @@ History records:
 
 
 def _main():
-    # global running_count
-    # print('{} this is {} time run'.format(datetime.datetime.now(),running_count))
-    # extract = Extract()
-    # extract.run()
+    global running_count
+    print('{} this is {} time run'.format(datetime.datetime.now(),running_count))
+    extract = Extract()
+    extract.run()
     # broadcast = Broadcast()
     # broadcast.send_data()
     # running_count += 1
@@ -631,48 +637,48 @@ def _main():
     #     print('')
     #     print('')
 
-    try:
-        global running_count
-        print('{} this is {} time run'.format(datetime.datetime.now(),running_count))
-        extract = Extract()
-        extract.run()
-        broadcast = Broadcast()
-        broadcast.send_data()
-        running_count += 1
-        now = datetime.datetime.now()
-        if now > now.replace(hour=15, minute=7, second=0, microsecond=0):
-            broadcast.clean_historical_data()
-            print('')
-            print('')
-            print('')
-    except:
-        telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
-        time.sleep(240)
+    # try:
+    #     global running_count
+    #     print('{} this is {} time run'.format(datetime.datetime.now(),running_count))
+    #     extract = Extract()
+    #     extract.run()
+    #     # broadcast = Broadcast()
+    #     # broadcast.send_data()
+    #     # running_count += 1
+    #     # now = datetime.datetime.now()
+    #     # if now > now.replace(hour=15, minute=16, second=0, microsecond=0):
+    #     #     broadcast.clean_historical_data()
+    #     #     print('')
+    #     #     print('')
+    #     #     print('')
+    # except:
+    #     telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+    #     time.sleep(240)
 
 
 if __name__ == '__main__':
-    # _main()
-    while True:
-        now = datetime.datetime.now()
-        if now.isoweekday() in range(1, 6) and now.replace(hour=8, minute=8, second=0,
-                                                           microsecond=0) < now < now.replace(hour=15, minute=20,
-                                                                                              second=0, microsecond=0):
-            try:
-                _main()
-                time.sleep(420)
-            except:
-                telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
-                time.sleep(420)
-        else:
-            delay = ((datetime.timedelta(hours=24) - (
-                        now.replace(second=0, microsecond=0) - now.replace(hour=8, minute=10, second=0,
-                                                                           microsecond=0))).total_seconds() % (
-                                 24 * 3600))
-            if delay == 0:
-                delay = 60
-            print(max(10, datetime.datetime.now().hour+1 if datetime.datetime.now().hour+1<16 else 10))
-            print('Out of transcation window, current time is {}, waiting time is {}s'.format(now, delay))
-            time.sleep(delay)
+    _main()
+    # while True:
+    #     now = datetime.datetime.now()
+    #     if now.isoweekday() in range(1, 6) and now.replace(hour=8, minute=15, second=0,
+    #                                                        microsecond=0) < now < now.replace(hour=15, minute=20,
+    #                                                                                           second=0, microsecond=0):
+    #         try:
+    #             _main()
+    #             time.sleep(240)
+    #         except:
+    #             telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+    #             time.sleep(240)
+    #     else:
+    #         delay = ((datetime.timedelta(hours=24) - (
+    #                     now.replace(second=0, microsecond=0) - now.replace(hour=8, minute=20, second=0,
+    #                                                                        microsecond=0))).total_seconds() % (
+    #                              24 * 3600))
+    #         if delay == 0:
+    #             delay = 60
+    #         print(max(10, datetime.datetime.now().hour+1 if datetime.datetime.now().hour+1<16 else 10))
+    #         print('Out of transcation window, current time is {}, waiting time is {}s'.format(now, delay))
+    #         time.sleep(delay)
 
 
 

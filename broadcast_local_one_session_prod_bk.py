@@ -14,7 +14,7 @@ import sys
 import datetime
 import random
 
-# python C:\Users\Siqi\Desktop\OptionFlow\broadcast_local.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:5.79.66.2:13010 -username option20201001 -password option123 -free_target "Option Flow Free" -vip_target "Option Flow VIP"
+# python C:\Users\Siqi\Desktop\OptionFlow\broadcast_local_one_session_prod.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:5.79.66.2:13010 -username audreyb123 -password option123 -free_target "Option Flow Free" -vip_target "Option Flow VIP"
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-url', type=str, default=None)
@@ -26,37 +26,12 @@ parser.add_argument('-free_target', type=str, default=None)
 parser.add_argument('-vip_target', type=str, default=None)
 args = parser.parse_args()
 
-headers = [
-# {
-# 'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0'
-# ,'cookie':'__adroll_fpc=ec138dc5651bbffdf6809a94abc7dd73-1601564534662; __ar_v4=%7CEWEJP57Y6NEUVKJVXOCEJP%3A20200931%3A1%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200931%3A1%7CNM6BA5VRZNDFJDSOSRXRPP%3A20200931%3A2; _fbp=fb.1.1601563852978.15442719; __cfduid=d56cb17662ac48aad2bcab65b8a2bd8941601563853; PHPSESSID=9e9ec6eb99e4ef5c48dc9e54b858e5c6; _ga=GA1.2.1217111726.1601564532; _gid=GA1.2.606489091.1601564532; intercom-id-dtoll8e6=22630759-c915-4933-a8e0-bf4b7b302598; intercom-session-dtoll8e6=SHNWcm5YN0lYMEx1cGNmNGcxT1ppZUpmRzJNWG…efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%2015595%2C%22%24device_id%22%3A%20%22174e4b108122be-01a1fbc4892f188-4c3f257b-e1000-174e4b10813203%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fflowalgo.com%2Fselect-a-plan%2F%22%2C%22%24initial_referring_domain%22%3A%20%22flowalgo.com%22%2C%22__mps%22%3A%20%7B%7D%2C%22__mpso%22%3A%20%7B%7D%2C%22__mpus%22%3A%20%7B%7D%2C%22__mpa%22%3A%20%7B%7D%2C%22__mpu%22%3A%20%7B%7D%2C%22__mpr%22%3A%20%5B%5D%2C%22__mpap%22%3A%20%5B%5D%2C%22%24user_id%22%3A%2015595%7D'.encode('utf-8')
-# },
+headers =
 {
-# mac pro firefox
-'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:81.0) Gecko/20100101 Firefox/81.0'
-,'cookie':'_ga=GA1.2.963995471.1590266285; intercom-id-dtoll8e6=765bde21-ca98-4aec-81f4-d8808fc5db3a; __adroll_fpc=115ce5abb5ab7585140ac4104ac03857-1590266307580; __ar_v4=%7CEWEJP57Y6NEUVKJVXOCEJP%3A20200912%3A1%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200912%3A1%7CNM6BA5VRZNDFJDSOSRXRPP%3A20200912%3A2; _fbp=fb.1.1590266289963.1401559072; __adroll_fpc=115ce5abb5ab7585140ac4104ac03857-1590266307580; __ar_v4=%7CEWEJP57Y6NEUVKJVXOCEJP%3A20200912%3A1%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200912%3A1%7CNM6BA5VRZNDFJDSOSRXRPP%3A20200912%3A1; SL_…_UA_105239038_2=1; mp_cef79b4c5c48fb3ec3efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%2015595%2C%22%24device_id%22%3A%20%221724341cf5522c-0e7337f5b8c0408-4b5569-1fa400-1724341cf5680c%22%2C%22%24initial_referrer%22%3A%20%22%24direct%22%2C%22%24initial_referring_domain%22%3A%20%22%24direct%22%2C%22__mps%22%3A%20%7B%7D%2C%22__mpso%22%3A%20%7B%7D%2C%22__mpus%22%3A%20%7B%7D%2C%22__mpa%22%3A%20%7B%7D%2C%22__mpu%22%3A%20%7B%7D%2C%22__mpr%22%3A%20%5B%5D%2C%22__mpap%22%3A%20%5B%5D%2C%22%24user_id%22%3A%2015595%7D'.encode('utf-8')
-},
-{
-# mac pro chrome
-'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'
-,'cookie':'__cfduid=dceb769e84c3ba2adde48ff6a05095db21600889952; PHPSESSID=af21240b2a370bfb6b52b91d5b56191b; _ga=GA1.2.1693030311.1600957852; __adroll_fpc=2e5bcdc5d8344fe06493fd29db21ea16-1600957853471; SL_C_23361dd035530_KEY=909c690836dff219fdb765f6e1091e5a99e5f112; _fbp=fb.1.1600957853843.836245199; intercom-id-dtoll8e6=3c88aacb-ea2e-4e9d-a899-4a2287ee1db0; _gid=GA1.2.2092655903.1601613287; _gat_gtag_UA_105239038_2=1; SL_C_23361dd035530_VID=u3vxmiOHvE; SL_C_23361dd035530_SID=EUDhh8KvbB; amember_nr=b7aaa37c69ab13d059984ad11229bb42; wordpress_logged_in_d1f53b3265d55ab79282aac86fcd5ba4=option20201001%7C1601786100%7COp3FnKniVA3G95sLrl8UdYF7XqlQw2wPfrEUccSTjxT%7Cc9fbc2dcf7b06f1946d2c559c68555d1c19c85c05b7def595827a8c4641a8387; mp_cef79b4c5c48fb3ec3efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%2015595%2C%22%24device_id%22%3A%20%22174c0862aa7aa6-011cbff22c1c99-316b7005-13c680-174c0862aa88e6%22%2C%22%24initial_referrer%22%3A%20%22%24direct%22%2C%22%24initial_referring_domain%22%3A%20%22%24direct%22%2C%22%24user_id%22%3A%2015595%7D; __ar_v4=NM6BA5VRZNDFJDSOSRXRPP%3A20200924%3A16%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200924%3A16%7CEWEJP57Y6NEUVKJVXOCEJP%3A20200924%3A16; intercom-session-dtoll8e6=eDh5UFN3ZFByckVlUGJFNTk3Q3NzVGlpeFFQb3o0bFN2b0hMZmhWN3JHVUZIaTR3bzBsTHVBTW5MQVBqUkFBby0tNm8zdE5mSDBhSWJWSU8yVnNsWThuQT09--1a2f60a6b799672c8048634f9700498f3a91ec2d'
-},
-{
-# dell edge
-'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362'
-,'cookie':'__adroll_fpc=b31410d05e81487e93800fba7406c094-1601261941695; __ar_v4=EWEJP57Y6NEUVKJVXOCEJP%3A20200928%3A5%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200928%3A5%7CNM6BA5VRZNDFJDSOSRXRPP%3A20200928%3A6; SL_C_23361dd035530_SID=x8JuLuA6uAb; __adroll_fpc=b31410d05e81487e93800fba7406c094-1601261941695; SL_C_23361dd035530_VID=FY9P6_1at-M; __ar_v4=%7CEWEJP57Y6NEUVKJVXOCEJP%3A20200928%3A1%7CJURQBX5ZWNGNLAFB4ISSVP%3A20200928%3A1%7CNM6BA5VRZNDFJDSOSRXRPP%3A20200928%3A1; amember_nr=dcc7022b3d89ec6b3f1f6b7a590e42b3; _gid=GA1.2.429820660.1601562557; intercom-id-dtoll8e6=1e0f5910-abe5-406b-a517-778fe8cda0f4; intercom-session-dtoll8e6=TGVDMVE3VTZHdHBJaXpsZmMrMGlFUHdKMTNiaHJOVWxEK0FSc2VZOEZKSGRQOURlanlVcm1RSC8zTTgrcGh6ci0ta2JOcFowaFRueDFCbk80QWYxZ1o1dz09--0d585cef8ddd6775c2d4417d79da90e12b0e343a; SL_C_23361dd035530_KEY=909c690836dff219fdb765f6e1091e5a99e5f112; _ga=GA1.2.284200782.1601261939; __cfduid=db12bbeb205a6b81e472e331665b1353d1600871497; _fbp=fb.1.1601261943782.1481715877; PHPSESSID=bcef61bba7a7cd98f8474d54d71aeaa8; wordpress_logged_in_d1f53b3265d55ab79282aac86fcd5ba4=option20201001%7C1601786669%7CbIMAwX25SsRLoP8fOPSF7kLuaMUeYACOlph65ENTZCS%7C7a7f24067a4587c511f5394a6a337347a11483d60da4aff11e34cdbe3782ee06; mp_cef79b4c5c48fb3ec3efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%2015595%2C%22%24device_id%22%3A%20%22174d2a6539be6-0c85953b091a7-71415a3b-e1000-174d2a6539c1c5%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fflowalgo.com%2F%22%2C%22%24initial_referring_domain%22%3A%20%22flowalgo.com%22%2C%22__mps%22%3A%20%7B%7D%2C%22__mpso%22%3A%20%7B%7D%2C%22__mpus%22%3A%20%7B%7D%2C%22__mpa%22%3A%20%7B%7D%2C%22__mpu%22%3A%20%7B%7D%2C%22__mpr%22%3A%20%5B%5D%2C%22__mpap%22%3A%20%5B%5D%2C%22%24user_id%22%3A%2015595%2C%22%24search_engine%22%3A%20%22bing%22%2C%22mp_keyword%22%3A%20%22flowalgo%22%7D'
-},
-{
-# dell chrome
-'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'
-,'cookie':'__cfduid=df32cb19205bc7e4b8ba14a3ccd5d96cf1601614085; _ga=GA1.2.1122056143.1601614090; _gid=GA1.2.200118318.1601614090; _gat_gtag_UA_105239038_2=1; PHPSESSID=31b465cf6ed8eb3a2095326f74cbfd4c; SL_C_23361dd035530_VID=xSbHHwMDqY-; SL_C_23361dd035530_KEY=909c690836dff219fdb765f6e1091e5a99e5f112; __adroll_fpc=282d4f361d234d5aa246286eee869388-1601614094159; intercom-id-dtoll8e6=5f313d1c-1f95-4882-8841-ca87260d4020; SL_C_23361dd035530_SID=N8pmVB-0K7J; _fbp=fb.1.1601614094994.719174546; amember_nr=083b117d309e7e8190beebb53db959f2; wordpress_logged_in_d1f53b3265d55ab79282aac86fcd5ba4=option20201001%7C1601786904%7Cukmp0AgC2RmzN71VRXUZZhls05toGaf64yOmFzePAVc%7C71efc2558a5bf9c678dd74688a808b1feca76e68b1e553c9710a1d5f551b36a7; mp_cef79b4c5c48fb3ec3efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%2015595%2C%22%24device_id%22%3A%20%22174e7a397b8243-07855eaa3ee8d-333376b-e1000-174e7a397b93d9%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fflowalgo.com%2F%22%2C%22%24initial_referring_domain%22%3A%20%22flowalgo.com%22%2C%22%24user_id%22%3A%2015595%7D; __ar_v4=NM6BA5VRZNDFJDSOSRXRPP%3A20201001%3A2%7CJURQBX5ZWNGNLAFB4ISSVP%3A20201001%3A2%7CEWEJP57Y6NEUVKJVXOCEJP%3A20201001%3A2; intercom-session-dtoll8e6=MVFkYTNLNFVXd2QwcjRXaER2NFJkbHJKNTZIU3pOdUR6Z21aU09LcFV5RFpSKzR3Q2lXdWRnNnRwRlRIR08xVS0tWTRwNGJtTUErQkwvbVo5NHJNWEtJQT09--07265877c5e478f82a8e333caccf7e1e79271cb2'
-},
-{
-# dell firefox
-'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0'
-,'cookie':'__cfduid=d9575aeed23abc90e2ae7310bf13769c61601614211; _ga=GA1.2.882484519.1601614214; _gid=GA1.2.1342851212.1601614214; intercom-id-dtoll8e6=1b3cec80-3400-405e-b8e8-aa6ac187b240; intercom-session-dtoll8e6=; __adroll_fpc=52aae2a98e3d57c84baee7508a8c5dae-1601614217675; __ar_v4=%7CEWEJP57Y6NEUVKJVXOCEJP%3A20201001%3A1%7CJURQBX5ZWNGNLAFB4ISSVP%3A20201001%3A1%7CNM6BA5VRZNDFJDSOSRXRPP%3A20201001%3A1; _fbp=fb.1.1601614219456.357098368; PHPSESSID=3f400d17e4c782213a8efa252390da6e; mp_cef79b4c5c48fb3ec3efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%20%22174e7a664067e-0c2f9365bbf568-4c3f257b-e1000-174e7a664078c%22%2C%22%24device_id%22%3A%20%22174e7a664067e-0c2f9365bbf568-4c3f257b-e1000-174e7a664078c%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fflowalgo.com%2F%22%2C%22%24initial_referring_domain%22%3A%20%22flowalgo.com%22%7D; _gat_gtag_UA_105239038_2=1; SL_C_23361dd035530_VID=0bgDW4PUV; SL_C_23361dd035530_KEY=909c690836dff219fdb765f6e1091e5a99e5f112; SL_C_23361dd035530_SID=jXzxaXOR-f5; __adroll_fpc=52aae2a98e3d57c84baee7508a8c5dae-1601614217675; __ar_v4=%7CEWEJP57Y6NEUVKJVXOCEJP%3A20201001%3A1%7CJURQBX5ZWNGNLAFB4ISSVP%3A20201001%3A1%7CNM6BA5VRZNDFJDSOSRXRPP%3A20201001%3A2; amember_nr=209cc92b2bd2120412e1d6f23cddee6a; wordpress_logged_in_d1f53b3265d55ab79282aac86fcd5ba4=option20201001%7C1601787091%7CQFG9oPUNcMUF2e1v9cJy3xaY1u0tQikiEFHWhkcPMyF%7Cfb3ae613951b9f63c6753513ecb4054a7d4dfed7e3a42bad974557fb311aebab'.encode('utf-8')
+'user-agent':''
+,'cookie':''.encode('utf-8')
 }
-]
+
 running_count = 1
 
 time_point = max(9, datetime.datetime.now().hour+1 if datetime.datetime.now().hour+1<=16 else 10)
