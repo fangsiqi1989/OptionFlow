@@ -14,8 +14,8 @@ import sys
 import datetime
 import random
 
-# python C:\Users\Siqi\Desktop\OptionFlow\broadcast_local_one_session_prod.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:5.79.66.2:13010 -username option20201216 -password option123 -free_target "" -vip_target "Option Flow VIP" -million_target "百万大单"
-# python C:\Users\Siqi\Desktop\OptionFlow\broadcast_local_one_session_prod.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:5.79.66.2:13010 -username option20201216 -password option123 -free_target "" -vip_target "Option Flow VIP,Option Flow 2 群" -million_target "百万大单"
+# python C:\Users\Siqi\Desktop\OptionFlow\broadcast_local_one_session_prod.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:5.79.66.2:13010 -username option20210115 -password option123 -free_target "" -vip_target "Option Flow VIP" -million_target "百万大单"
+# python C:\Users\Siqi\Desktop\OptionFlow\broadcast_local_one_session_prod.py -url https://app.flowalgo.com/ -login_url https://app.flowalgo.com/users/login -proxy http:5.79.66.2:13010 -username option20210115 -password option123 -free_target "" -vip_target "Option Flow VIP,Option Flow 2 群" -million_target "百万大单"
 
 
 parser = argparse.ArgumentParser()
@@ -48,7 +48,7 @@ args = parser.parse_args()
 
 headers = {
 'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'
-,'cookie':'_ga=GA1.2.1122056143.1601614090; SL_C_23361dd035530_VID=xSbHHwMDqY-; SL_C_23361dd035530_KEY=909c690836dff219fdb765f6e1091e5a99e5f112; __adroll_fpc=282d4f361d234d5aa246286eee869388-1601614094159; intercom-id-dtoll8e6=5f313d1c-1f95-4882-8841-ca87260d4020; _fbp=fb.1.1601614094994.719174546; __adroll_fpc=ce481f124e8b1fd7a3839ad834766b81-1601960955579; __cfduid=db83a7f30ccada41ea95ef04c955224281606975395; _gid=GA1.2.2033686401.1608101444; amember_nr=57634ba67e67e0ce917eeff185137924; _gat_gtag_UA_105239038_2=1; __ar_v4=NM6BA5VRZNDFJDSOSRXRPP%3A20210015%3A2%7CJURQBX5ZWNGNLAFB4ISSVP%3A20210015%3A2%7CEWEJP57Y6NEUVKJVXOCEJP%3A20210015%3A2; PHPSESSID=bb7275d8646b9fe506a032961f134149; wordpress_logged_in_d1f53b3265d55ab79282aac86fcd5ba4=option20201216%7C1608441079%7CjOBtG6ahyXYt2s5gHdYTeG5NX3spf91i7bMUQCyZshd%7C3f64af3a72d2d734dc607f311bb9fca139978c39b5211cf0d569ac87fcac2bce; mp_cef79b4c5c48fb3ec3efe8059605ec56_mixpanel=%7B%22distinct_id%22%3A%2018571%2C%22%24device_id%22%3A%20%22174e7a397b8243-07855eaa3ee8d-333376b-e1000-174e7a397b93d9%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fflowalgo.com%2F%22%2C%22%24initial_referring_domain%22%3A%20%22flowalgo.com%22%2C%22%24user_id%22%3A%2018571%2C%22__mps%22%3A%20%7B%7D%2C%22__mpso%22%3A%20%7B%7D%2C%22__mpus%22%3A%20%7B%7D%2C%22__mpa%22%3A%20%7B%7D%2C%22__mpu%22%3A%20%7B%7D%2C%22__mpr%22%3A%20%5B%5D%2C%22__mpap%22%3A%20%5B%5D%7D; intercom-session-dtoll8e6=ekpPa0VSMDNyN0FoTngwenFCRlk5OTVka0ZHMVlURFFkZjZMRVAwTDQyOFNFYmtNUlhSYkRDd0pBUnpZdHBvay0temhvL1NmY3BYd1dFQk0rKzNSaUpmdz09--c7529533a27325045449d7f97a62a63299fe9fa7; __ar_v4=NM6BA5VRZNDFJDSOSRXRPP%3A20210015%3A3%7CJURQBX5ZWNGNLAFB4ISSVP%3A20210015%3A2%7CEWEJP57Y6NEUVKJVXOCEJP%3A20210015%3A2'
+,'cookie':'_ga=GA1.2.1122056143.1601614090; SL_C_23361dd035530_VID=xSbHHwMDqY-; SL_C_23361dd035530_KEY=909c690836dff219fdb765f6e1091e5a99e5f112; __adroll_fpc=282d4f361d234d5aa246286eee869388-1601614094159; _fbp=fb.1.1601614094994.719174546; __adroll_fpc=ce481f124e8b1fd7a3839ad834766b81-1601960955579; _gid=GA1.2.1343756811.1626328784; _gat_gtag_UA_105239038_2=1; __ar_v4=NM6BA5VRZNDFJDSOSRXRPP:20210713:1|JURQBX5ZWNGNLAFB4ISSVP:20210713:1|EWEJP57Y6NEUVKJVXOCEJP:20210713:1; PHPSESSID=084a5232a09520ee5ffada6edee4b89c; amember_nr=a5234b01dc59b6fca2d812761f404063; wordpress_logged_in_d1f53b3265d55ab79282aac86fcd5ba4=option20210706|1626501589|wmmKS7tSM16NA8RC27TuaykxYezCDgqAUoSRfHw9Xud|fe9432aad2faf7a15fb9ba071a65c5e5deeedc3469a339eb8b870caa99bb0fb8; mp_cef79b4c5c48fb3ec3efe8059605ec56_mixpanel={"distinct_id": 27495,"$device_id": "174e7a397b8243-07855eaa3ee8d-333376b-e1000-174e7a397b93d9","$initial_referrer": "https://flowalgo.com/","$initial_referring_domain": "flowalgo.com","$user_id": 27495,"__mps": {},"__mpso": {},"__mpus": {},"__mpa": {},"__mpu": {},"__mpr": [],"__mpap": []}; intercom-session-dtoll8e6=RzBtSTJSMFhkYkpsM0gwZjZDdWZwWkpOaXdZNTJIRWpDVEVzcHpUYW0rUW5VNkNZc0pQekhQamZFRk9lYkhCRy0tNllYYTA4WlJrUUFyK2p2S2tWaytRZz09--e6d8c7d415f3644895840145d4b04c367f6d0c01; __ar_v4=NM6BA5VRZNDFJDSOSRXRPP:20210713:2|JURQBX5ZWNGNLAFB4ISSVP:20210713:1|EWEJP57Y6NEUVKJVXOCEJP:20210713:1'
 }
 
 
@@ -120,21 +120,30 @@ class Option:
             print('Session created!')
             return session
         except:
-            telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+            # telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
             return None
 
     def extract(self, session):
         try:
-            response = session.get(self.url, headers=headers)
+            print('create response')
+            response = session.get(self.url, headers=headers, timeout=10)
+        # except:
+        #     print('session request failed')
+        #     return
+            print('parse')
+
+            parser = etree.HTMLParser(encoding='utf-8')
+
+            print('create html element')
+
+            htmlElement = etree.fromstring(response.content.decode('utf-8'), parser=parser)
+
+            print('extrarct data')
+
+            data = htmlElement.xpath('//*[@id="optionflow"]/div[2]//div[@class and @data-ticker and @data-sentiment and @data-flowid and @data-premiumpaid and @data-ordertype]')
         except:
-            telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+            print('session request failed')
             return
-
-        parser = etree.HTMLParser(encoding='utf-8')
-
-        htmlElement = etree.fromstring(response.content.decode('utf-8'), parser=parser)
-
-        data = htmlElement.xpath('//*[@id="optionflow"]/div[2]//div[@class and @data-ticker and @data-sentiment and @data-flowid and @data-premiumpaid and @data-ordertype]')
         print('Number of records', len(data))
         if len(data) == 0:
             print('='*100)
@@ -148,7 +157,7 @@ class Option:
             print('='*100)
             print('='*100)
             # print(response.content.decode('utf-8'))
-            telegram_bot_sendtext('-408542611', 'No records return from website!!!')
+            # telegram_bot_sendtext('-408542611', 'No records return from website!!!')
 
         conn = build_database_connection()
 
@@ -158,15 +167,21 @@ class Option:
 
         cursor.execute(sql_truncate_realtime)
 
+        print("truncate table realtime_option_flow;")
+
+
         for d in data:
+
             # time
             # time = d.xpath('./div[1]//text()')[0]
             time = d.xpath("./div[@class='time']/span/text()")[0]
             timestamp = d.xpath("./div[@class='time']/@data-time")[0]
 
+
             # ticker
             # ticker = d.xpath('./div[2]//text()')[0]
             ticker = d.xpath("./div[@class='ticker']/span/text()")[0]
+
 
             # expiry
             # expiry = d.xpath('./div[3]/span//text()')[0]
@@ -200,7 +215,9 @@ class Option:
 
             # sector
             # sector = d.xpath('./div[12]/span//text()')[0]
-            sector = d.xpath("./div[@class='sector']/span/text()")[0]
+            # sector = d.xpath("./div[@class='sector']/span/text()")[0]
+            sector = "N/A"
+            # print(sector)
 
             # magnitude
             # //div[@class='magnitude']/span/i/@title/
@@ -210,6 +227,7 @@ class Option:
                 insert into realtime_option_flow(transcation_time,transcation_timestamp,ticker,expiry,ContractType,strike,SpotPrice,ContractSizePrice,MultiExchangeSweep,premium,sector,magnitude,row_hash)
                 values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,md5(%s));
                 """
+            # print("data inserted")
             cursor.execute(sql, (
             time, timestamp, ticker, expiry, ContractType, strike, SpotPrice, ContractSizePrice, MultiExchangeSweep,
             premium, sector, magnitude,
@@ -513,7 +531,7 @@ class Option:
                 vip_window = self.local_win(vip_win)
                 self.txt_ctrl_v(hourly_update+contract_hourly)
                 self.send_msg(vip_window)
-            telegram_bot_sendtext('-1001403437208', hourly_update + contract_hourly)
+            # telegram_bot_sendtext('-1001403437208', hourly_update + contract_hourly)
             # telegram_bot_sendtext('-1001189954337', hourly_update + contract_hourly)
             time_point += 1
         if time_point >= 16:
@@ -557,7 +575,7 @@ History records:
                 self.txt_ctrl_v(historical_line)
                 self.send_msg(vip_window)
 
-            telegram_bot_sendtext('-1001403437208', historical_line)
+            # telegram_bot_sendtext('-1001403437208', historical_line)
             # telegram_bot_sendtext('-1001189954337', historical_line)
 
             if int(row[11]) >= 90 or 'M' in row[8]:
@@ -641,7 +659,7 @@ def _main():
                 option = Option()
                 option.run()
             except:
-                telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
+                # telegram_bot_sendtext('-408542611', "Option flow job failed at {}".format(str(datetime.datetime.now())))
                 time.sleep(120)
         else:
             delay = ((datetime.timedelta(hours=24) - ( now.replace(second=0, microsecond=0) - now.replace(hour=8, minute=10, second=0, microsecond=0))).total_seconds() % ( 24 * 3600))
